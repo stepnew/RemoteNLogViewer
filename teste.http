@@ -1,0 +1,20 @@
+POST http://localhost:96/api/v1/logs/login http/1.1
+Content-Type: application/json
+
+{
+  "userName": "admin",
+  "password": "admin"
+}
+
+###
+
+// Testing the IdentityServer endpoint directly to request token
+POST http://localhost:96/connect/token http/1.1
+Content-Type: application/x-www-form-urlencoded
+
+client_id=log_remote_viewer
+&client_secret=MyS3Cr3tK3y
+&grant_type=user
+&scope=log_remote_viewer
+&userName=admin
+&password=admin
