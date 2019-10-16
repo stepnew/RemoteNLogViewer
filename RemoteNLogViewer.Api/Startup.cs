@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using IdentityModel.AspNetCore.OAuth2Introspection;
 using IdentityServer4.AccessTokenValidation;
@@ -22,13 +23,14 @@ namespace RemoteNLogViewer.Api
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //configura identityserver para requisição de tokens
+            ConfigureCors(services);
+
+            //Configure IdentityServer4 to generate tokens
             ConfigureIdentityServer(services);
 
-            //configura autenticação usando IdentityServer para gerar tokens
+            //Configure Authentication to use IdentityServer4
             ConfigureAuthentication(services);
 
             services.AddHttpClient("ids", c =>
@@ -45,9 +47,9 @@ namespace RemoteNLogViewer.Api
             services.AddSignalR();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseCors("Defaultcors");
             app.UseIdentityServer();
             app.UseAuthentication();
 
@@ -56,6 +58,27 @@ namespace RemoteNLogViewer.Api
                 hub.MapHub<LogHub>("/loghub");
             });
             app.UseMvc();
+        }
+
+        private void ConfigureCors(IServiceCollection services)
+        {
+            services.AddCors(o => o.AddPolicy("Defaultcors", builder =>
+            {
+                var originsSettings = Configuration.GetValue<string>("RemoteNLogViewer:Cors:AllowedHosts");
+
+                builder.AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials();
+
+                if (originsSettings.Any(a => a.Equals("*")))
+                {
+                    builder.AllowAnyOrigin();
+                }
+                else
+                {
+                    builder.WithOrigins(originsSettings.Split(";"));
+                }
+            }));
         }
 
         private void ConfigureIdentityServer(IServiceCollection services)
