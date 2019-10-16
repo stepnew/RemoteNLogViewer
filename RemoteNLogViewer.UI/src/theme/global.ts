@@ -18,6 +18,7 @@ export default css`
   body {
     text-rendering: optimizeLegibility !important;
     -webkit-font-smoothing: antialiased !important;
+    background-color: #f5f5f5;
   }
 
   button {

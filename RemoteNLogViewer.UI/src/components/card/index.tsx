@@ -6,7 +6,7 @@ interface ICardProps {
   width?: string;
 }
 
-const Card: React.FunctionComponent<ICardProps> = React.memo<ICardProps>(
+const Card: React.FunctionComponent<ICardProps> = React.memo(
   ({ height, width, children }) => {
     return (
       <StyledCard height={height} width={width}>

@@ -1,6 +1,6 @@
 import { css } from "@emotion/core";
 import styled from "../../theme/styled";
-import { Button } from "office-ui-fabric-react";
+import { DefaultButton } from "office-ui-fabric-react";
 
 const ViewerWrapper = styled.div``;
 
@@ -28,7 +28,7 @@ export const HeaderInfo = styled.div`
   align-items: center;
 `;
 
-export const ButtonLogout = styled(Button)`
+export const ButtonLogout = styled(DefaultButton)`
   background: transparent;
   border: 1px solid #fff;
   padding: 10px 8px;
@@ -38,6 +38,14 @@ export const ButtonLogout = styled(Button)`
 
 export const Content = styled.div`
   padding: 30px;
+`;
+
+export const StackInfoContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  width: 100%;
 `;
 
 export default ViewerWrapper;

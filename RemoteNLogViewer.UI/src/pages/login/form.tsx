@@ -3,7 +3,7 @@ import React, { useCallback, useState } from "react";
 import { jsx } from "@emotion/core";
 import {
   TextField,
-  Button,
+  PrimaryButton,
   Spinner,
   SpinnerSize,
   Stack,
@@ -121,14 +121,14 @@ const LoginForm: React.FunctionComponent = React.memo(() => {
                   : undefined
               }
             />
-            <Button
+            <PrimaryButton
               primary
               css={{ width: "100%", height: "48px", marginTop: "20px" }}
               disabled={!isValid || isSubmitting}
               type="submit"
             >
               {isSubmitting ? <Spinner size={SpinnerSize.medium} /> : "Login"}
-            </Button>
+            </PrimaryButton>
             {visibleMessageBarError && (
               <MessageBar messageBarType={MessageBarType.error}>
                 Unable to create authentication token

@@ -9,23 +9,115 @@ import ViewerWrapper, {
   Header,
   HeaderInfo,
   ButtonLogout,
-  Content
+  Content,
+  StackInfoContent
 } from "./style";
 import Card from "../../components/card";
 import hub from "../../infra/signalr_hub";
 
 import http from "../../infra/http";
 import ConnectionInfo from "../../components/connection_info";
+import AccessKeyInfo from "../../components/access_key_info";
+import LogActions from "../../components/log_actions";
+import LogBody from "../../components/log_body";
+
+const objLog = [
+  {
+    level: "debug",
+    date: "11/11/1111",
+    logger: "aaaaaaa",
+    appName: "RemoteNLoViewer",
+    appEnv: "Development",
+    message: "bbbbbbbbbbbbbbbbb",
+    error: "eeeeeeeeeeeeeeeeeee",
+    httpMethod: "POST",
+    controllerName: "User",
+    actionName: "login",
+    ip: "iiiiiiiii"
+  },
+  {
+    level: "trace",
+    date: "11/11/1111",
+    logger: "aaaaaaa",
+    appName: "RemoteNLoViewer",
+    appEnv: "Development",
+    message: "bbbbbbbbbbbbbbbbb",
+    error: "eeeeeeeeeeeeeeeeeee",
+    httpMethod: "GET",
+    controllerName: "User",
+    actionName: "login",
+    ip: "iiiiiiiii"
+  },
+  {
+    level: "info",
+    date: "11/11/1111",
+    logger: "aaaaaaa",
+    appName: "RemoteNLoViewer",
+    appEnv: "Development",
+    message: "bbbbbbbbbbbbbbbbb",
+    error: "eeeeeeeeeeeeeeeeeee",
+    httpMethod: "PUT",
+    controllerName: "User",
+    actionName: "login",
+    ip: "iiiiiiiii"
+  },
+  {
+    level: "fatal",
+    date: "11/11/1111",
+    logger: "aaaaaaa",
+    appName: "RemoteNLoViewer",
+    appEnv: "Development",
+    message: "bbbbbbbbbbbbbbbbb",
+    error: "eeeeeeeeeeeeeeeeeee",
+    httpMethod: "DELETE",
+    controllerName: "User",
+    actionName: "login",
+    ip: "iiiiiiiii"
+  },
+  {
+    level: "warn",
+    date: "11/11/1111",
+    logger: "aaaaaaa",
+    appName: "RemoteNLoViewer",
+    appEnv: "Development",
+    message: "bbbbbbbbbbbbbbbbb",
+    error: "eeeeeeeeeeeeeeeeeee",
+    httpMethod: "DELETE",
+    controllerName: "User",
+    actionName: "login",
+    ip: "iiiiiiiii"
+  },
+  {
+    level: "error",
+    date: "11/11/1111",
+    logger: "aaaaaaa",
+    appName: "RemoteNLoViewer",
+    appEnv: "Development",
+    message: "bbbbbbbbbbbbbbbbb",
+    error: "eeeeeeeeeeeeeeeeeee",
+    httpMethod: "DELETE",
+    controllerName: "User",
+    actionName: "login",
+    ip: "iiiiiiiii"
+  },
+];
 
 const ViewerPage: React.FunctionComponent = React.memo(() => {
   const { push } = useHistory();
   const hubRef = useRef<HubConnection>();
-  const [connectionId, setConnectionId] = useState();
-  const [log, setLog] = useState([]);
-  const [accessKey, setAccessKey] = useState();
+  const [logs, setLogs] = useState(objLog);
+  const [connectionId, setConnectionId] = useState<string | null>();
+  const [accessConnectionKey, setAccessConnectionKey] = useState<
+    string | null
+  >();
+
+  const onClickButtonLogout = useCallback(() => {
+    sessionStorage.clear();
+    push("/");
+  }, [push]);
 
   const receiveLayout = (layout: Object[]) => {
-    setLog(prevLog => [...prevLog, layout]);
+    // setLogs(prevLogs => [...prevLogs, layout]);
   };
 
   const createAccessKey = React.useCallback(async () => {
@@ -41,7 +133,7 @@ const ViewerPage: React.FunctionComponent = React.memo(() => {
           }
         }
       );
-      setAccessKey(resultado.data.data.accessKey);
+      setAccessConnectionKey(resultado.data.data.accessKey);
     } catch (error) {
       console.log(error);
     }
@@ -60,10 +152,33 @@ const ViewerPage: React.FunctionComponent = React.memo(() => {
     }
   }, []);
 
-  const onClickButtonLogout = useCallback(() => {
-    sessionStorage.clear();
-    push("/");
-  }, [push]);
+  const endSession = async () => {
+    try {
+      await http.post(
+        "/api/v1/logs/end_session",
+        {
+          connectionId,
+          accessConnectionKey
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`
+          }
+        }
+      );
+
+      hubRef.current.stop();
+      hubRef.current = null;
+      setAccessConnectionKey(null);
+      setConnectionId(null);
+      setLogs([]);
+
+      console.log("Connection terminated successfully");
+    } catch (error) {
+      console.log(error);
+      console.log("A problem was encountered while logging out");
+    }
+  };
 
   useEffect(() => {
     createConnection();
@@ -93,9 +208,22 @@ const ViewerPage: React.FunctionComponent = React.memo(() => {
       <Content>
         <Card>
           <Stack horizontal tokens={{ childrenGap: 16 }}>
-            <ConnectionInfo connectionId={connectionId} />
+            <StackInfoContent>
+              <ConnectionInfo connectionId={connectionId} />
+              <LogActions
+                createConnection={createConnection}
+                connectionId={connectionId}
+                accessConnectionKey={accessConnectionKey}
+                endSession={endSession}
+                createAccessKey={createAccessKey}
+              />
+            </StackInfoContent>
+            <StackInfoContent>
+              <AccessKeyInfo accessConnectionKey={accessConnectionKey} />
+            </StackInfoContent>
           </Stack>
         </Card>
+        <LogBody logs={logs} />
       </Content>
     </ViewerWrapper>
   );
