@@ -24,7 +24,7 @@ const AccessKeyInfo: React.FunctionComponent<IAccessKeyInfoProps> = React.memo(
               <br />
               <ShowLogSample />
             </div>
-            <Copyable text={"accessConnectionKey"} />
+            <Copyable text={accessConnectionKey} />
           </React.Fragment>
         ) : null}
       </AccessKeyInfoWrapper>

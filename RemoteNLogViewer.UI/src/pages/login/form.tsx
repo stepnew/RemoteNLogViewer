@@ -14,7 +14,7 @@ import {
 import { FormikProps, FormikErrors, Form, Formik, FormikActions } from "formik";
 import { useHistory } from "react-router";
 
-// import http from "../../infra/http";
+import http from "../../infra/http";
 
 const verticalGapStackTokens: IStackTokens = {
   childrenGap: 16
@@ -48,23 +48,14 @@ const LoginForm: React.FunctionComponent = React.memo(() => {
       { setSubmitting }: FormikActions<LoginFormValues>
     ) => {
       try {
-        // const response = await http.post("/api/v1/logs/login", {
-        //   username,
-        //   password
-        // });
+        const response = await http.post("/api/v1/logs/login", {
+          username,
+          password
+        });
 
-        const response = {
-          data: {
-            data: {
-              access_token: "fooobarbaz",
-              displayName: "foo"
-            }
-          }
-        };
-
-        sessionStorage.setItem("token", response.data.data.access_token);
+        sessionStorage.setItem("token", response.data.access_token);
         sessionStorage.setItem("userName", username);
-        sessionStorage.setItem("displayName", response.data.data.displayName);
+        sessionStorage.setItem("displayName", response.data.displayName);
 
         setSubmitting(false);
         push("/viewer");

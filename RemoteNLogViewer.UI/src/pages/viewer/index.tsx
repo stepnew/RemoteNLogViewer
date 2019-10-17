@@ -21,91 +21,10 @@ import AccessKeyInfo from "../../components/access_key_info";
 import LogActions from "../../components/log_actions";
 import LogBody from "../../components/log_body";
 
-const objLog = [
-  {
-    level: "debug",
-    date: "11/11/1111",
-    logger: "aaaaaaa",
-    appName: "RemoteNLoViewer",
-    appEnv: "Development",
-    message: "bbbbbbbbbbbbbbbbb",
-    error: "eeeeeeeeeeeeeeeeeee",
-    httpMethod: "POST",
-    controllerName: "User",
-    actionName: "login",
-    ip: "iiiiiiiii"
-  },
-  {
-    level: "trace",
-    date: "11/11/1111",
-    logger: "aaaaaaa",
-    appName: "RemoteNLoViewer",
-    appEnv: "Development",
-    message: "bbbbbbbbbbbbbbbbb",
-    error: "eeeeeeeeeeeeeeeeeee",
-    httpMethod: "GET",
-    controllerName: "User",
-    actionName: "login",
-    ip: "iiiiiiiii"
-  },
-  {
-    level: "info",
-    date: "11/11/1111",
-    logger: "aaaaaaa",
-    appName: "RemoteNLoViewer",
-    appEnv: "Development",
-    message: "bbbbbbbbbbbbbbbbb",
-    error: "eeeeeeeeeeeeeeeeeee",
-    httpMethod: "PUT",
-    controllerName: "User",
-    actionName: "login",
-    ip: "iiiiiiiii"
-  },
-  {
-    level: "fatal",
-    date: "11/11/1111",
-    logger: "aaaaaaa",
-    appName: "RemoteNLoViewer",
-    appEnv: "Development",
-    message: "bbbbbbbbbbbbbbbbb",
-    error: "eeeeeeeeeeeeeeeeeee",
-    httpMethod: "DELETE",
-    controllerName: "User",
-    actionName: "login",
-    ip: "iiiiiiiii"
-  },
-  {
-    level: "warn",
-    date: "11/11/1111",
-    logger: "aaaaaaa",
-    appName: "RemoteNLoViewer",
-    appEnv: "Development",
-    message: "bbbbbbbbbbbbbbbbb",
-    error: "eeeeeeeeeeeeeeeeeee",
-    httpMethod: "DELETE",
-    controllerName: "User",
-    actionName: "login",
-    ip: "iiiiiiiii"
-  },
-  {
-    level: "error",
-    date: "11/11/1111",
-    logger: "aaaaaaa",
-    appName: "RemoteNLoViewer",
-    appEnv: "Development",
-    message: "bbbbbbbbbbbbbbbbb",
-    error: "eeeeeeeeeeeeeeeeeee",
-    httpMethod: "DELETE",
-    controllerName: "User",
-    actionName: "login",
-    ip: "iiiiiiiii"
-  },
-];
-
 const ViewerPage: React.FunctionComponent = React.memo(() => {
   const { push } = useHistory();
   const hubRef = useRef<HubConnection>();
-  const [logs, setLogs] = useState(objLog);
+  const [logs, setLogs] = useState();
   const [connectionId, setConnectionId] = useState<string | null>();
   const [accessConnectionKey, setAccessConnectionKey] = useState<
     string | null
@@ -117,7 +36,7 @@ const ViewerPage: React.FunctionComponent = React.memo(() => {
   }, [push]);
 
   const receiveLayout = (layout: Object[]) => {
-    // setLogs(prevLogs => [...prevLogs, layout]);
+    setLogs(prevLogs => [...prevLogs, layout]);
   };
 
   const createAccessKey = React.useCallback(async () => {
@@ -133,7 +52,8 @@ const ViewerPage: React.FunctionComponent = React.memo(() => {
           }
         }
       );
-      setAccessConnectionKey(resultado.data.data.accessKey);
+      
+      setAccessConnectionKey(resultado.data.accessKey);
     } catch (error) {
       console.log(error);
     }
