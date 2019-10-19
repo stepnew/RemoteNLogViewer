@@ -24,7 +24,7 @@ import LogBody from "../../components/log_body";
 const ViewerPage: React.FunctionComponent = React.memo(() => {
   const { push } = useHistory();
   const hubRef = useRef<HubConnection>();
-  const [logs, setLogs] = useState();
+  const [logs, setLogs] = useState([]);
   const [connectionId, setConnectionId] = useState<string | null>();
   const [accessConnectionKey, setAccessConnectionKey] = useState<
     string | null
@@ -52,7 +52,7 @@ const ViewerPage: React.FunctionComponent = React.memo(() => {
           }
         }
       );
-      
+
       setAccessConnectionKey(resultado.data.accessKey);
     } catch (error) {
       console.log(error);
