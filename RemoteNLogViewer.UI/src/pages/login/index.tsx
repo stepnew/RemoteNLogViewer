@@ -13,11 +13,10 @@ const LoginPage: React.FunctionComponent = React.memo(() => {
       <Card width="450px">
         <Text
           variant="xxLarge"
-          css={theme => ({
-            color: theme.palette.themePrimary,
+          css={{
             textAlign: "center",
             marginBottom: "15px"
-          })}
+          }}
         >
           Remote NLog Viewer
         </Text>

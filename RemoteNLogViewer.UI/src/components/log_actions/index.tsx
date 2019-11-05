@@ -19,7 +19,7 @@ const LogActions: React.FunctionComponent<ILogActionsProps> = React.memo(
   }) => {
     return (
       <Stack horizontal tokens={{ childrenGap: 5 }}>
-        {connectionId && (
+        {!connectionId && (
           <PrimaryButton type="primary" onClick={() => createConnection()}>
             Create new Session
           </PrimaryButton>

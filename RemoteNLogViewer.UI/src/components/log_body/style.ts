@@ -9,7 +9,6 @@ const LogBodyWrapper = styled.div`
 export const ItemWrapper = styled.div`
   display: flex;
   align-items: center;
-  /* margin-bottom: 48px; */
 `;
 
 export const ItemInfoContent = styled.div`

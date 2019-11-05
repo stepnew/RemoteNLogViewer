@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Icon, Text, Stack, TooltipHost } from "office-ui-fabric-react";
 import copy from "copy-to-clipboard";
 
@@ -11,15 +11,22 @@ interface ICopyableProps {
 const Copyable: React.FunctionComponent<ICopyableProps> = React.memo(
   ({ text }) => {
     const [contentTooltip, setContentTooltip] = useState("Copy");
+    let timeout: NodeJS.Timeout;
 
     const handleClickFileCopy = () => {
       copy(text);
       setContentTooltip("Copied");
 
-      setTimeout(() => {
+      timeout = setTimeout(() => {
         setContentTooltip("Copy");
       }, 1000);
     };
+
+    useEffect(() => {
+      return () => {
+        clearTimeout(timeout);
+      };
+    });
 
     return (
       <CopyableWrapper>
