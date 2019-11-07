@@ -29,6 +29,3 @@ yarn-error.log*
 #.net
 obj
 bin
-
-#block the UI because is under construction
-RemoteNLogViewer.UI

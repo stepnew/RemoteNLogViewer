@@ -1,4 +1,7 @@
-POST http://localhost:96/api/v1/logs/login http/1.1
+@baseUrl = http://localhost:96
+
+# @name login
+POST {{baseUrl}}/api/v1/logs/login http/1.1
 Content-Type: application/json
 
 {
@@ -9,7 +12,7 @@ Content-Type: application/json
 ###
 
 // Testing the IdentityServer endpoint directly to request token
-POST http://localhost:96/connect/token http/1.1
+POST {{baseUrl}}/connect/token http/1.1
 Content-Type: application/x-www-form-urlencoded
 
 client_id=log_remote_viewer
@@ -18,3 +21,35 @@ client_id=log_remote_viewer
 &scope=log_remote_viewer
 &userName=admin
 &password=admin
+
+###
+
+@token = {{login.response.body.access_token}}
+POST {{baseUrl}}/api/v1/logs/create_channel http/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "ConnectionId": "dIBeBaj4E64ySeuR6aZ9mA",
+  "AccessKey": "FED31CFF08D9020392CC908781E22FAE"
+}
+
+###
+
+POST {{baseUrl}}/api/v1/logs http/1.1
+Content-Type: application/json
+
+{
+  "Logger": "Application.Controller.Test",
+  "AccessKey": "FED31CFF08D9020392CC908781E22FAE",
+  "Level": "Info",
+  "Message": "Information Message",
+  "Date": "2019-10-17T22:14:23",
+  "AppName": "Application Name",
+  "AppEnv": "Development",
+  "Ip": "127.0.0.1",
+  "HttpMethod": "GET",
+  "ControllerName": "Application.Controller.Test",
+  "ActionName": "GetLog",
+  "Error": ""
+}
