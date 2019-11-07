@@ -16,8 +16,6 @@ const StyledCard = styled.div<ICard>`
 
       width: ${width};
       height: ${height};
-
-      /* box-shadow: 0 3px 20px rgba(0, 0, 0, 0.1); */
     `;
   }}
 `;
