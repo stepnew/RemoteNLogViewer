@@ -7,6 +7,7 @@ export default {
     fileCopy: <i className="ri-file-copy-line" />,
     completed: <i className="ri-checkbox-circle-line" />,
     clear: <i className="ri-close-line" />,
-    codeView: <i className="ri-code-view" />
+    codeView: <i className="ri-code-view" />,
+    Cancel: <i className="ri-close-line" />
   }
 };
